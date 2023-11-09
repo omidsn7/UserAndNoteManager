@@ -9,7 +9,7 @@ namespace UserAndNoteManager.Models
 
         [Required]
         [MaxLength(128)]
-        public string FirsName { get; set; }
+        public string FirstName { get; set; }
 
         [MaxLength(128)]
         public string LastName { get; set; }
@@ -20,7 +20,6 @@ namespace UserAndNoteManager.Models
         public string Email { get; set; }
 
         [Required]
-        [MaxLength(128)]
         public int Age { get; set; }
 
         public string Website { get; set; }

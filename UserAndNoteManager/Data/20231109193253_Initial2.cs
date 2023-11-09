@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace UserAndNoteManager.Migrations
+namespace UserAndNoteManager.Data
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class Initial2 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -34,10 +34,10 @@ namespace UserAndNoteManager.Migrations
                 {
                     ID = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    FirsName = table.Column<string>(type: "TEXT", maxLength: 128, nullable: false),
+                    FirstName = table.Column<string>(type: "TEXT", maxLength: 128, nullable: false),
                     LastName = table.Column<string>(type: "TEXT", maxLength: 128, nullable: false),
                     Email = table.Column<string>(type: "TEXT", nullable: false),
-                    Age = table.Column<int>(type: "INTEGER", maxLength: 128, nullable: false),
+                    Age = table.Column<int>(type: "INTEGER", nullable: false),
                     Website = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
@@ -47,7 +47,7 @@ namespace UserAndNoteManager.Migrations
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "ID", "Age", "Email", "FirsName", "LastName", "Website" },
+                columns: new[] { "ID", "Age", "Email", "FirstName", "LastName", "Website" },
                 values: new object[] { 1, 24, "Admin@Admin.Com", "Admin", "Admin", "www.Admin.com" });
         }
 

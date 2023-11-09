@@ -23,7 +23,7 @@ namespace UserAndNoteManager.Data
             entity.HasData(new User
             {
                 ID = 1,
-                FirsName = "Admin",
+                FirstName = "Admin",
                 LastName = "Admin",
                 Age = 24,
                 Email = "Admin@Admin.Com",
