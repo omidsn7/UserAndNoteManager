@@ -24,5 +24,6 @@ namespace UserAndNoteManager.Models
 
         public string Website { get; set; }
 
+        public virtual ICollection<Note> Notes { get; set; }
     }
 }

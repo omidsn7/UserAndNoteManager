@@ -22,5 +22,8 @@ namespace UserAndNoteManager.Models
         
         [Required]
         public bool Published { get; set; }
+
+        public int UserID { get; set; }
+        public virtual User User { get; set; }
     }
 }

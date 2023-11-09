@@ -6,38 +6,38 @@ namespace UserAndNoteManager.DAL
 {
     public class UserManager : IUserManager
     {
-        private readonly UANDbContext _AppDatabase;
-        public UserManager(UANDbContext AppDatabase)
+        private readonly UANDbContext _context;
+        public UserManager(UANDbContext context)
         {
-            _AppDatabase = AppDatabase;
+            _context = context;
         }
 
         public void Create(User user)
         {
-            _AppDatabase.Users.Add(user);
-            _AppDatabase.SaveChanges();
+            _context.Users.Add(user);
+            _context.SaveChanges();
         }
 
         public void Delete(int ID)
         {
-            User user = _AppDatabase.Users.First(x => x.ID == ID);
-            _AppDatabase.Users.Remove(user);
-            _AppDatabase.SaveChanges();
+            User user = _context.Users.First(x => x.ID == ID);
+            _context.Users.Remove(user);
+            _context.SaveChanges();
         }
 
         public List<User> GetAllUsers()
         {
-             return _AppDatabase.Users.ToList();
+             return _context.Users.ToList();
         }
 
         public User? GetUsersByID(int ID)
         {
-            return _AppDatabase.Users.Where(x => x.ID == ID).FirstOrDefault();
+            return _context.Users.Where(x => x.ID == ID).FirstOrDefault();
         }
 
         public void Update(User user)
         {
-            User UpdateUser = _AppDatabase.Users.First(x => x.ID == user.ID);
+            User UpdateUser = _context.Users.First(x => x.ID == user.ID);
 
             UpdateUser.FirstName = user.FirstName;
             UpdateUser.LastName = user.LastName;
@@ -45,7 +45,7 @@ namespace UserAndNoteManager.DAL
             UpdateUser.Email = user.Email;
             UpdateUser.Website = user.Website;
 
-            _AppDatabase.SaveChanges();
+            _context.SaveChanges();
         }
     }
 }
