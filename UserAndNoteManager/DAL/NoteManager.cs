@@ -37,7 +37,14 @@ namespace UserAndNoteManager.DAL
 
         public void Update(Note note)
         {
-            throw new NotImplementedException();
+            Note UpdateNote = _context.Notes.First(x => x.ID == note.ID);
+
+            UpdateNote.Content = note.Content;
+            UpdateNote.DateModified = note.DateModified;
+            UpdateNote.Published = note.Published;
+            UpdateNote.Views = note.Views;
+
+            _context.SaveChanges();
         }
     }
 }

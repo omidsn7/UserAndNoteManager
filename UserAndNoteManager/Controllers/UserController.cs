@@ -9,9 +9,9 @@ namespace UserAndNoteManager.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserManager _userManager;
-        public UserController(IUserManager userManagerScope) 
+        public UserController(IUserManager userManager) 
         {
-             _userManager = userManagerScope;
+             _userManager = userManager;
         }
 
         /// <summary>

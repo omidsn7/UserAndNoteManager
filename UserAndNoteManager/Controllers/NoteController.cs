@@ -1,100 +1,100 @@
-﻿//using Microsoft.AspNetCore.Mvc;
-//using UserAndNoteManager.Interface;
-//using UserAndNoteManager.Models;
+﻿using Microsoft.AspNetCore.Mvc;
+using UserAndNoteManager.Interface;
+using UserAndNoteManager.Models;
 
-//namespace UserAndNoteManager.Controllers
-//{
-//    [Route("api/[controller]")]
-//    [ApiController]
-//    public class NoteController : ControllerBase
-//    {
-//        private readonly IUserManager _userManager;
-//        public NoteController(IUserManager userManagerScope)
-//        {
-//            _userManager = userManagerScope;
-//        }
+namespace UserAndNoteManager.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class NoteController : ControllerBase
+    {
+        private readonly INoteManager _noteManager;
+        public NoteController(INoteManager noteManager)
+        {
+            _noteManager = noteManager;
+        }
 
-//        /// <summary>
-//        /// Method for Create A New User 
-//        /// </summary>
-//        /// <param name="user"></param>
-//        [HttpPost]
-//        [Route("CreateUser")]
-//        public JsonResult CreateUser([FromBody] User user)
-//        {
-//            if (user == null)
-//                return Common.BadRequest();
+        /// <summary>
+        /// Method for Create A New Note 
+        /// </summary>
+        /// <param name="user"></param>
+        [HttpPost]
+        [Route("CreateNote")]
+        public JsonResult CreateNote([FromBody] Note note)
+        {
+            if (note == null)
+                return Common.BadRequest();
 
-//            _userManager.Create(user);
-//            return Common.OkResult();
-//        }
+            _noteManager.Create(note);
+            return Common.OkResult();
+        }
 
-//        /// <summary>
-//        /// Method for Get All Of Users
-//        /// </summary>
-//        /// <param name="user"></param>
-//        [HttpGet]
-//        [Route("GetAllUsers")]
-//        public JsonResult GetAllUsers()
-//        {
-//            List<User> users = _userManager.GetAllUsers();
+        /// <summary>
+        /// Method for Get All Notes Of a User
+        /// </summary>
+        /// <param name="user">User ID</param>
+        [HttpGet]
+        [Route("GetNotesOfUser")]
+        public JsonResult GetNotesOfUser(int ID)
+        {
+            List<Note> notes = _noteManager.GetNotesOfUser(ID);
 
-//            if (users.Count == 0)
-//                return Common.NotFound();
+            if (notes.Count == 0)
+                return Common.NotFound();
 
-//            return new JsonResult(users);
-//        }
+            return new JsonResult(notes);
+        }
 
-//        /// <summary>
-//        /// Method for Get One Specified User And The User Notes
-//        /// </summary>
-//        /// <param name="ID"></param>
-//        [HttpGet]
-//        [Route("GetUsersByID")]
-//        public JsonResult GetUsersByID(int ID)
-//        {
-//            User? user = _userManager.GetUsersByID(ID);
+        /// <summary>
+        /// Method for Get One Specified Note
+        /// </summary>
+        /// <param name="ID">Note ID</param>
+        [HttpGet]
+        [Route("GetNote")]
+        public JsonResult GetNote(int ID)
+        {
+            Note? note = _noteManager.GetNote(ID);
 
-//            if (user == null)
-//                return Common.NotFound();
+            if (note == null)
+                return Common.NotFound();
 
-//            return new JsonResult(user);
-//        }
+            return new JsonResult(note);
+        }
 
-//        /// <summary>
-//        /// Method for Delete One User
-//        /// </summary>
-//        /// <param name="user"></param>
-//        [HttpDelete]
-//        [Route("DeleteUser")]
-//        public JsonResult DeleteUser(int ID)
-//        {
-//            if (_userManager.GetUsersByID(ID) == null)
-//                return Common.NotFound();
+        /// <summary>
+        /// Method for Delete One Note
+        /// </summary>
+        /// <param name="user"></param>
+        [HttpDelete]
+        [Route("DeleteNote")]
+        public JsonResult DeleteNote(int ID)
+        {
+            if (_noteManager.GetNote(ID) == null)
+                return Common.NotFound();
 
-//            _userManager.Delete(ID);
+            _noteManager.Delete(ID);
 
-//            return Common.NoContent();
-//        }
+            return Common.NoContent();
+        }
 
 
-//        /// <summary>
-//        /// Method for Update One User
-//        /// </summary>
-//        /// <param name="user"></param>
-//        [HttpPut]
-//        [Route("UpdateUser")]
-//        public JsonResult UpdateUser(User user)
-//        {
-//            if (user == null)
-//                return Common.BadRequest();
+        /// <summary>
+        /// Method for Update One Note
+        /// </summary>
+        /// <param name="user"></param>
+        [HttpPut]
+        [Route("UpdateNote")]
+        public JsonResult UpdateNote(Note note)
+        {
+            if (note == null)
+                return Common.BadRequest();
 
-//            if (_userManager.GetUsersByID(user.ID) == null)
-//                return Common.NotFound();
+            if (_noteManager.GetNote(note.ID) == null)
+                return Common.NotFound();
 
-//            _userManager.Update(user);
-//            return Common.OkResult();
-//        }
+            _noteManager.Update(note);
+            return Common.OkResult();
+        }
 
-//    }
-//}
+    }
+}
