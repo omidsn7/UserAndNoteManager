@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using UserAndNoteManager.Interface;
 using UserAndNoteManager.Models;
+using UserAndNoteManager.MyHub;
 
 namespace UserAndNoteManager.Controllers
 {
@@ -9,9 +11,14 @@ namespace UserAndNoteManager.Controllers
     public class NoteController : ControllerBase
     {
         private readonly INoteManager _noteManager;
-        public NoteController(INoteManager noteManager)
+        private readonly IUserManager _userManager;
+        private IHubContext<HubContext> _hubContext;
+
+        public NoteController(INoteManager noteManager, IHubContext<HubContext> hubContext, IUserManager userManager)
         {
             _noteManager = noteManager;
+            _hubContext = hubContext;
+            _userManager = userManager;
         }
 
         /// <summary>
@@ -20,12 +27,14 @@ namespace UserAndNoteManager.Controllers
         /// <param name="user"></param>
         [HttpPost]
         [Route("CreateNote")]
-        public JsonResult CreateNote([FromBody] Note note)
+        public async Task<JsonResult> CreateNote([FromBody] Note note)
         {
             if (note == null)
                 return Common.BadRequest();
 
             _noteManager.Create(note);
+            User? user = _userManager.GetUsersByID(note.UserID);
+            await _hubContext.Clients.All.SendAsync("ChangesOnUserAndNotes", $"{user.FirstName} {user.LastName} Added A New Note");
             return Common.OkResult();
         }
 
@@ -35,7 +44,7 @@ namespace UserAndNoteManager.Controllers
         /// <param name="user">User ID</param>
         [HttpGet]
         [Route("GetNotesOfUser")]
-        public JsonResult GetNotesOfUser([FromQuery] int ID)
+        public async Task<JsonResult> GetNotesOfUser([FromQuery] int ID)
         {
             List<Note> notes = _noteManager.GetNotesOfUser(ID);
 
@@ -51,7 +60,7 @@ namespace UserAndNoteManager.Controllers
         /// <param name="ID">Note ID</param>
         [HttpGet]
         [Route("GetNote")]
-        public JsonResult GetNote([FromQuery] int ID)
+        public async Task<JsonResult> GetNote([FromQuery] int ID)
         {
             Note? note = _noteManager.GetNote(ID);
 
@@ -67,12 +76,15 @@ namespace UserAndNoteManager.Controllers
         /// <param name="user"></param>
         [HttpDelete]
         [Route("DeleteNote")]
-        public JsonResult DeleteNote([FromBody] int ID)
+        public async Task<JsonResult> DeleteNote([FromBody] int ID)
         {
-            if (_noteManager.GetNote(ID) == null)
+            Note? note = _noteManager.GetNote(ID);
+            if (note == null)
                 return Common.NotFound();
 
+            User? user = _userManager.GetUsersByID(note.UserID);
             _noteManager.Delete(ID);
+            await _hubContext.Clients.All.SendAsync("ChangesOnUserAndNotes", $"Note With ID [{note.ID}] Deleted That Note Is For {user.FirstName} {user.LastName}");
 
             return Common.NoContent();
         }
@@ -84,13 +96,16 @@ namespace UserAndNoteManager.Controllers
         /// <param name="user"></param>
         [HttpPut]
         [Route("UpdateNote")]
-        public JsonResult UpdateNote([FromBody] Note note)
+        public async Task<JsonResult> UpdateNote([FromBody] Note note)
         {
             if (note == null)
                 return Common.BadRequest();
 
-            if (_noteManager.GetNote(note.ID) == null)
+            Note? UpdatedNote = _noteManager.GetNote(note.ID);
+            if (UpdatedNote == null)
                 return Common.NotFound();
+
+            await _hubContext.Clients.All.SendAsync("ChangesOnUserAndNotes", $"Note With ID [{note.ID}] Updated");
 
             _noteManager.Update(note);
             return Common.OkResult();

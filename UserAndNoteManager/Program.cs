@@ -4,6 +4,7 @@ using UserAndNoteManager.DAL;
 using UserAndNoteManager.Interface;
 using Newtonsoft.Json;
 using System.Text.Json.Serialization;
+using UserAndNoteManager.MyHub;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,8 +19,10 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<IUserManager, UserManager>();
 builder.Services.AddTransient<INoteManager, NoteManager>();
 
+builder.Services.AddSignalR();
 
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -30,8 +33,11 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapHub<HubContext>("/HubContext");
 
 app.Run();

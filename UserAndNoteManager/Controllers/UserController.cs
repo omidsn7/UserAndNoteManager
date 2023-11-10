@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using UserAndNoteManager.Interface;
 using UserAndNoteManager.Models;
+using UserAndNoteManager.MyHub;
 
 namespace UserAndNoteManager.Controllers
 {
@@ -9,9 +11,11 @@ namespace UserAndNoteManager.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserManager _userManager;
-        public UserController(IUserManager userManager) 
+        private IHubContext<HubContext> _hubContext;
+        public UserController(IUserManager userManager, IHubContext<HubContext> hubContext) 
         {
              _userManager = userManager;
+            _hubContext = hubContext;
         }
 
         /// <summary>
@@ -20,7 +24,7 @@ namespace UserAndNoteManager.Controllers
         /// <param name="user"></param>
         [HttpPost]
         [Route("CreateUser")]
-        public JsonResult CreateUser([FromBody] User user)
+        public async Task<JsonResult> CreateUser([FromBody] User user)
         {
             if (user == null)
                 return Common.BadRequest();
@@ -29,6 +33,7 @@ namespace UserAndNoteManager.Controllers
 
             if (Result == "done")
             {
+                await _hubContext.Clients.All.SendAsync("ChangesOnUserAndNotes", $"{user.FirstName} {user.LastName} Added");
                 return Common.OkResult();
             }
             else
@@ -43,7 +48,7 @@ namespace UserAndNoteManager.Controllers
         /// <param name="user"></param>
         [HttpGet]
         [Route("GetAllUsers")]
-        public JsonResult GetAllUsers()
+        public async Task<JsonResult> GetAllUsers()
         {
             List<User> users = _userManager.GetAllUsers();
 
@@ -59,7 +64,7 @@ namespace UserAndNoteManager.Controllers
         /// <param name="ID"></param>
         [HttpGet]
         [Route("GetUsersByID")]
-        public JsonResult GetUsersByID([FromQuery] int ID)
+        public async Task<JsonResult> GetUsersByID([FromQuery] int ID)
         {
             User? user = _userManager.GetUsersByID(ID);
 
@@ -75,13 +80,15 @@ namespace UserAndNoteManager.Controllers
         /// <param name="user"></param>
         [HttpDelete]
         [Route("DeleteUser")]
-        public JsonResult DeleteUser([FromBody] int ID)
+        public async Task<JsonResult> DeleteUser([FromBody] int ID)
         {
-            if (_userManager.GetUsersByID(ID) == null)
+            User? user = _userManager.GetUsersByID(ID);
+            if (user == null)
                 return Common.NotFound();
 
             _userManager.Delete(ID);
 
+            await _hubContext.Clients.All.SendAsync("ChangesOnUserAndNotes", $"{user.FirstName} {user.LastName} Deleted And All Of This User Notes Deleted");
             return Common.NoContent();
         }
 
@@ -92,14 +99,18 @@ namespace UserAndNoteManager.Controllers
         /// <param name="user"></param>
         [HttpPut]
         [Route("UpdateUser")]
-        public JsonResult UpdateUser([FromBody] User user)
+        public async Task<JsonResult> UpdateUser([FromBody] User user)
         {
             if (user == null)
                 return Common.BadRequest();
 
-            if (_userManager.GetUsersByID(user.ID) == null)
+
+            User? UpdatedUser = _userManager.GetUsersByID(user.ID);
+            if (UpdatedUser == null)
                 return Common.NotFound();
 
+            await _hubContext.Clients.All.SendAsync("ChangesOnUserAndNotes", $"{UpdatedUser.FirstName} {UpdatedUser.LastName} Updated");
+            
             _userManager.Update(user);
             return Common.OkResult();
         }
