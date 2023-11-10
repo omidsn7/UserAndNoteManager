@@ -11,7 +11,7 @@ using UserAndNoteManager.Data;
 namespace UserAndNoteManager.Migrations
 {
     [DbContext(typeof(UANDbContext))]
-    [Migration("20231110120523_initial")]
+    [Migration("20231110151959_initial")]
     partial class initial
     {
         /// <inheritdoc />

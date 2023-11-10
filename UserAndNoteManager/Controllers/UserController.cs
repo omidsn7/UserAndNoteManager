@@ -25,8 +25,16 @@ namespace UserAndNoteManager.Controllers
             if (user == null)
                 return Common.BadRequest();
 
-            _userManager.Create(user);
-            return Common.OkResult();
+            string Result = _userManager.Create(user);
+
+            if (Result == "done")
+            {
+                return Common.OkResult();
+            }
+            else
+            {
+                return Common.BadRequest(Result);
+            }
         }
 
         /// <summary>

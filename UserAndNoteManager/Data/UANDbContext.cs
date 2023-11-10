@@ -28,6 +28,6 @@ namespace UserAndNoteManager.Data
                 Email = "Admin@Admin.Com",
                 Website = "www.Admin.com"
             }));
-            }
+        }
     }
 }

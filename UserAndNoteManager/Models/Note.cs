@@ -31,6 +31,6 @@ namespace UserAndNoteManager.Models
         public int UserID { get; set; }
 
         [ForeignKey("UserID")]
-        public virtual User? User { get; set; }
+        public User? User { get; set; }
     }
 }
