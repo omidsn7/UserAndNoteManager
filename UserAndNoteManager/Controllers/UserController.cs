@@ -51,7 +51,7 @@ namespace UserAndNoteManager.Controllers
         /// <param name="ID"></param>
         [HttpGet]
         [Route("GetUsersByID")]
-        public JsonResult GetUsersByID(int ID)
+        public JsonResult GetUsersByID([FromQuery] int ID)
         {
             User? user = _userManager.GetUsersByID(ID);
 
@@ -67,7 +67,7 @@ namespace UserAndNoteManager.Controllers
         /// <param name="user"></param>
         [HttpDelete]
         [Route("DeleteUser")]
-        public JsonResult DeleteUser(int ID)
+        public JsonResult DeleteUser([FromBody] int ID)
         {
             if (_userManager.GetUsersByID(ID) == null)
                 return Common.NotFound();
@@ -84,7 +84,7 @@ namespace UserAndNoteManager.Controllers
         /// <param name="user"></param>
         [HttpPut]
         [Route("UpdateUser")]
-        public JsonResult UpdateUser(User user)
+        public JsonResult UpdateUser([FromBody] User user)
         {
             if (user == null)
                 return Common.BadRequest();

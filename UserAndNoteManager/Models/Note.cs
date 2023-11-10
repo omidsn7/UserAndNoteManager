@@ -1,10 +1,15 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace UserAndNoteManager.Models
 {
     public class Note
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
 
         [Required]
@@ -24,6 +29,8 @@ namespace UserAndNoteManager.Models
         public bool Published { get; set; }
 
         public int UserID { get; set; }
-        public virtual User User { get; set; }
+
+        [ForeignKey("UserID")]
+        public virtual User? User { get; set; }
     }
 }

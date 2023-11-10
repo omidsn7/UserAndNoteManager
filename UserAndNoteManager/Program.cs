@@ -14,6 +14,7 @@ builder.Services.AddDbContext<UANDbContext>(Options => Options.UseSqlite(builder
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<IUserManager, UserManager>();
+builder.Services.AddTransient<INoteManager, NoteManager>();
 
 var app = builder.Build();
 

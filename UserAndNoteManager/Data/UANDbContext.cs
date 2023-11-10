@@ -19,7 +19,6 @@ namespace UserAndNoteManager.Data
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<User>(entity =>
-
             entity.HasData(new User
             {
                 ID = 1,
@@ -29,6 +28,6 @@ namespace UserAndNoteManager.Data
                 Email = "Admin@Admin.Com",
                 Website = "www.Admin.com"
             }));
-        }
+            }
     }
 }

@@ -1,10 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.Serialization;
 
 namespace UserAndNoteManager.Models
 {
     public class User
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
 
         [Required]
@@ -24,6 +28,6 @@ namespace UserAndNoteManager.Models
 
         public string Website { get; set; }
 
-        public virtual ICollection<Note> Notes { get; set; }
+        public List<Note>? Notes { get; set; }
     }
 }

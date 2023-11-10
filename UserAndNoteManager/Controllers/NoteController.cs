@@ -35,7 +35,7 @@ namespace UserAndNoteManager.Controllers
         /// <param name="user">User ID</param>
         [HttpGet]
         [Route("GetNotesOfUser")]
-        public JsonResult GetNotesOfUser(int ID)
+        public JsonResult GetNotesOfUser([FromQuery] int ID)
         {
             List<Note> notes = _noteManager.GetNotesOfUser(ID);
 
@@ -51,7 +51,7 @@ namespace UserAndNoteManager.Controllers
         /// <param name="ID">Note ID</param>
         [HttpGet]
         [Route("GetNote")]
-        public JsonResult GetNote(int ID)
+        public JsonResult GetNote([FromQuery] int ID)
         {
             Note? note = _noteManager.GetNote(ID);
 
@@ -67,7 +67,7 @@ namespace UserAndNoteManager.Controllers
         /// <param name="user"></param>
         [HttpDelete]
         [Route("DeleteNote")]
-        public JsonResult DeleteNote(int ID)
+        public JsonResult DeleteNote([FromBody] int ID)
         {
             if (_noteManager.GetNote(ID) == null)
                 return Common.NotFound();
@@ -84,7 +84,7 @@ namespace UserAndNoteManager.Controllers
         /// <param name="user"></param>
         [HttpPut]
         [Route("UpdateNote")]
-        public JsonResult UpdateNote(Note note)
+        public JsonResult UpdateNote([FromBody] Note note)
         {
             if (note == null)
                 return Common.BadRequest();
