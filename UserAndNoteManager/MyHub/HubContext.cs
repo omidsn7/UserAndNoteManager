@@ -18,4 +18,9 @@ public sealed class HubContext : Hub
     {
         await Clients.All.SendAsync("ChangesOnUserAndNotes", message);
     }
+
+    public async Task SendAdminMessage(string message)
+    {
+        await Clients.All.SendAsync("SendAdminMessage", message);
+    }
 }
